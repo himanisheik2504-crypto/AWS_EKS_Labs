@@ -22,7 +22,7 @@ backend "remote" {
 		organization = "eks-org-himani"
 
 		workspaces {
-			name = "AWS_EKS_Labs"
+			name = "github_action-workspace"
 		}
 	}
 }
