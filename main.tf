@@ -11,7 +11,7 @@ module "eks" {
   node_group_name         = "cloudquicklabs"
   scaling_desired_size    = 2
   scaling_max_size        = 1
-  scaling_min_size        = 2
+  scaling_min_size        = 1
   instance_types          = ["t3.medium"]
   key_pair                = "TestKeyPair"
 }
