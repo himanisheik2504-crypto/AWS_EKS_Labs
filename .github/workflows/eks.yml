@@ -1,0 +1,57 @@
+name: "Terraform EKS Workflow"
+ 
+on:
+  workflow_dispatch:  # manual trigger
+ 
+jobs:
+ 
+  Plan:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout your repo
+      - name: Checkout Code
+        uses: actions/checkout@v3
+ 
+      # Step 2: Setup Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.6  # change if needed
+ 
+      # Step 3: Set Terraform Cloud Token
+      - name: Set Terraform Cloud Token
+        run: echo "TF_TOKEN_app_terraform_io=${{ secrets.TFC_API_TOKEN }}" >> $GITHUB_ENV
+ 
+      # Step 4: Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
+ 
+      # Step 5: Validate Terraform code
+      - name: Terraform Validate
+        run: terraform validate
+ 
+      # Step 6: Terraform Plan
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+ 
+  Apply:
+    needs: Plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+ 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.6
+ 
+      - name: Set Terraform Cloud Token
+        run: echo "TF_TOKEN_app_terraform_io=${{ secrets.TFC_API_TOKEN }}" >> $GITHUB_ENV
+ 
+      - name: Terraform Init
+        run: terraform init
+ 
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+ 
